@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#a9162b">
+  <meta name="description" content="রক্তসাথী—রক্তদাতা খোঁজা ও রক্তের অনুরোধের একটি নিরাপদ প্ল্যাটফর্ম।">
+  <title>রক্তসাথী | রক্তদাতা খুঁজুন</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div class="demo-banner" role="note">
+    <strong>সুরক্ষা নোট:</strong> রক্তের সামঞ্জস্য বা দানের যোগ্যতা চিকিৎসক/ব্লাড ব্যাংক নিশ্চিত করবেন। রোগীর নাম, ফোন বা মেডিকেল রিপোর্ট এখানে লিখবেন না।
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="রক্তসাথী হোম">
+      <span class="brand-mark" aria-hidden="true">❤</span>
+      <span>রক্তসাথী</span>
+    </a>
+    <nav aria-label="প্রধান নেভিগেশন">
+      <a href="#search">ডোনার খুঁজুন</a>
+      <a href="#requests">রক্তের অনুরোধ</a>
+      <a href="#become-donor">ডোনার হোন</a>
+    </nav>
+    <a class="header-cta" href="#become-donor">ডোনার হিসেবে যোগ দিন</a>
+    <button class="auth-button" id="auth-button" type="button">লগইন / সাইন আপ</button>
+    <button class="auth-button signout-button" id="signout-button" type="button" hidden>লগআউট</button>
+    <button class="install-button" id="install-button" type="button" hidden>অ্যাপ ইনস্টল</button>
+  </header>
+
+  <main>
+    <div class="app-status" id="app-status" role="status" hidden></div>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot"></span> একসাথে বাঁচাই জীবন</p>
+        <h1>রক্তের প্রয়োজনে<br><span>পাশে আছে মানুষ।</span></h1>
+        <p class="hero-description">আপনার এলাকার রক্তদাতা খুঁজুন, অথবা রক্তের প্রয়োজনের কথা জানান। ডোনারের যোগাযোগের তথ্য তাঁর অনুমতি ছাড়া প্রকাশ করা হয় না।</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#search">ডোনার খুঁজুন <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="#requests">রক্তের অনুরোধ দেখুন</a>
+        </div>
+        <div class="trust-note"><span aria-hidden="true">🔒</span> যোগাযোগের তথ্য গোপন রাখুন · ডোনারের সম্মতি আগে</div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="blood-drop">❤</div>
+        <div class="floating-card card-donor"><span class="mini-avatar">র</span><span><b>রক্তদাতা</b><small>আপনার পাশেই</small></span><i></i></div>
+        <div class="floating-card card-help"><span class="help-icon">+</span><span><b>একটি দান</b><small>বাঁচাতে পারে জীবন</small></span></div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="সেবা সম্পর্কে">
+      <div><strong>৮</strong><span>রক্তের গ্রুপ</span></div>
+      <div><strong>০</strong><span>ফোন নম্বর প্রকাশ</span></div>
+      <div><strong>১</strong><span>লক্ষ্য: জীবন বাঁচানো</span></div>
+    </section>
+
+    <section class="section search-section" id="search">
+      <div class="section-heading">
+        <div><p class="eyebrow">দ্রুত খুঁজুন</p><h2>আপনার এলাকার ডোনার</h2></div>
+        <p>তালিকায় শুধু সম্মতিদানকারী ডোনারের নাম, রক্তের গ্রুপ ও আনুমানিক এলাকা দেখা যায়।</p>
+      </div>
+      <form class="search-panel" id="search-form">
+        <label>রক্তের গ্রুপ
+          <select id="search-blood" name="blood">
+            <option value="">সব গ্রুপ</option>
+          </select>
+        </label>
+        <label>জেলা
+          <select id="search-district" name="district">
+            <option value="">সব জেলা</option>
+          </select>
+        </label>
+        <label>এলাকা / উপজেলা
+          <input id="search-area" name="area" type="search" placeholder="যেমন: ধানমন্ডি">
+        </label>
+        <button class="button button-primary search-button" type="submit">ডোনার খুঁজুন</button>
+      </form>
+      <div class="result-heading">
+        <h3>ডোনার তালিকা <span class="count-pill" id="donor-count">০</span></h3>
+        <label class="availability-filter"><input id="available-only" type="checkbox"> শুধু এখন উপলভ্য</label>
+      </div>
+      <div class="donor-grid" id="donor-list" aria-live="polite"></div>
+      <p class="privacy-hint"><span aria-hidden="true">ⓘ</span> ফোন নম্বর তালিকায় দেখানো হয় না। ডোনার অনুরোধ গ্রহণ করলেই কেবল অনুরোধকারী তাঁর নম্বর দেখতে পাবেন।</p>
+    </section>
+
+    <section class="section request-section" id="requests">
+      <div class="section-heading">
+        <div><p class="eyebrow">সাহায্যের অনুরোধ</p><h2>সাম্প্রতিক রক্তের অনুরোধ</h2></div>
+        <button class="button button-outline" type="button" data-open-request>অনুরোধ যোগ করুন <span aria-hidden="true">+</span></button>
+      </div>
+      <div class="request-grid" id="request-list" aria-live="polite"></div>
+      <p class="privacy-hint">অনুরোধে রোগীর পূর্ণ নাম, ফোন নম্বর, বাসার ঠিকানা বা মেডিকেল রিপোর্ট দেবেন না।</p>
+    </section>
+
+    <section class="section account-section" id="my-activity" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">আপনার অ্যাকাউন্ট</p><h2>যোগাযোগের অনুরোধ</h2></div>
+        <p>ডোনার হিসেবে আসা অনুরোধ গ্রহণ বা প্রত্যাখ্যান করুন।</p>
+      </div>
+      <div class="activity-grid" id="activity-list" aria-live="polite"></div>
+    </section>
+
+    <section class="join-section" id="become-donor">
+      <div class="join-copy">
+        <p class="eyebrow">আপনার রক্ত, কারও নতুন আশা</p>
+        <h2>রক্তদাতা হিসেবে<br>যোগ দিতে চান?</h2>
+        <p>ডোনার হওয়া স্বেচ্ছামূলক। আপনি কখন যোগাযোগ পাওয়া যাবে তা নিয়ন্ত্রণ করবেন এবং যেকোনো সময় তালিকা থেকে নিজেকে সরিয়ে নিতে পারবেন।</p>
+        <ul class="benefit-list">
+          <li><span>✓</span> ফোন নম্বর পাবলিক প্রোফাইলে দেখানো হয় না</li>
+          <li><span>✓</span> অনুরোধ গ্রহণ বা প্রত্যাখ্যান আপনার সিদ্ধান্ত</li>
+          <li><span>✓</span> যেকোনো সময় নিজের উপলভ্যতা বদলান</li>
+        </ul>
+      </div>
+      <form class="donor-form" id="donor-form">
+        <h3>ডোনার প্রোফাইল</h3>
+        <p class="form-intro">তালিকায় আপনার profile দেখাতে হবে কি না আপনি নিয়ন্ত্রণ করবেন।</p>
+        <label>নাম (শুধু প্রথম নাম)
+          <input name="name" type="text" maxlength="30" autocomplete="off" placeholder="যেমন: রাহিম" required>
+        </label>
+        <div class="form-row">
+          <label>রক্তের গ্রুপ
+            <select name="blood" required>
+              <option value="">বেছে নিন</option>
+            </select>
+          </label>
+          <label>জেলা
+            <select name="district" required>
+              <option value="">বেছে নিন</option>
+            </select>
+          </label>
+        </div>
+        <label>এলাকা / উপজেলা
+          <input name="area" type="text" maxlength="40" autocomplete="off" placeholder="যেমন: ধানমন্ডি" required>
+        </label>
+        <label>ফোন নম্বর (শুধু সম্মত contact request-এর পরে দেখানো হবে)
+          <input name="phone" type="tel" maxlength="25" autocomplete="tel" inputmode="tel" placeholder="+8801XXXXXXXXX" required>
+        </label>
+        <label class="check-label"><input name="available" type="checkbox" checked> আপাতত রক্তদানে আগ্রহী</label>
+        <label class="check-label consent-label"><input name="consent" type="checkbox" required> আমার নাম, গ্রুপ ও আনুমানিক এলাকা donor search-এ দেখাতে সম্মতি দিচ্ছি।</label>
+        <button class="button button-primary form-submit" type="submit">ডোনার প্রোফাইল সংরক্ষণ</button>
+        <button class="profile-hide-button" id="hide-profile-button" type="button" hidden>আমার প্রোফাইল তালিকা থেকে লুকান</button>
+        <p class="form-message" id="donor-message" role="status"></p>
+      </form>
+    </section>
+
+    <section class="safety-strip">
+      <span class="safety-icon" aria-hidden="true">✚</span>
+      <div><h2>নিরাপত্তা ও স্বাস্থ্য সবার আগে</h2><p>রক্তদানের যোগ্যতা, রক্তের সামঞ্জস্য এবং দানের সময় সম্পর্কে চিকিৎসক বা ব্লাড ব্যাংকের পরামর্শ নিন। এই অ্যাপ চিকিৎসা-পরামর্শ দেয় না।</p></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">❤</span><span>রক্তসাথী</span></a>
+    <p>মানুষের পাশে মানুষ। <span>রক্তদানের আগে চিকিৎসক/ব্লাড ব্যাংকের পরামর্শ নিন।</span></p>
+    <a href="#home">উপরে ফিরুন ↑</a>
+  </footer>
+
+  <dialog class="app-dialog" id="request-dialog" aria-labelledby="request-title">
+    <form id="request-form" method="dialog">
+      <button class="dialog-close" type="button" aria-label="বন্ধ করুন" data-close-dialog>×</button>
+      <p class="eyebrow">রক্তের প্রয়োজন?</p>
+      <h2 id="request-title">রক্তের অনুরোধ যোগ করুন</h2>
+      <p class="form-intro">কোনো ফোন নম্বর, রোগীর নাম, বাসার ঠিকানা বা মেডিকেল তথ্য দেবেন না। সাধারণ এলাকা ও হাসপাতালের নাম যথেষ্ট।</p>
+      <div class="form-row">
+        <label>রক্তের গ্রুপ
+          <select name="blood" required>
+            <option value="">বেছে নিন</option>
+          </select>
+        </label>
+        <label>কত ইউনিট
+          <select name="units" required>
+            <option value="১">১ ইউনিট</option><option value="২">২ ইউনিট</option><option value="৩">৩ ইউনিট</option>
+          </select>
+        </label>
+      </div>
+      <label>জেলা
+        <select name="district" required>
+          <option value="">বেছে নিন</option>
+        </select>
+      </label>
+      <label>এলাকা / হাসপাতাল (সাধারণ এলাকা লিখুন)
+        <input name="area" type="text" maxlength="60" placeholder="যেমন: ঢাকা মেডিকেল এলাকা" required>
+      </label>
+      <label>কখন প্রয়োজন?
+        <input name="needed" type="datetime-local" required>
+      </label>
+      <label class="check-label consent-label"><input name="safe" type="checkbox" required> কোনো রোগীর নাম, ফোন বা ব্যক্তিগত তথ্য দিচ্ছি না।</label>
+      <button class="button button-primary form-submit" type="submit">রক্তের অনুরোধ প্রকাশ করুন</button>
+      <p class="form-message" id="request-message" role="status"></p>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog" id="auth-dialog" aria-labelledby="auth-title">
+    <form id="auth-form">
+      <button class="dialog-close" type="button" aria-label="বন্ধ করুন" data-close-dialog>×</button>
+      <p class="eyebrow">নিরাপদ অ্যাকাউন্ট</p>
+      <h2 id="auth-title">লগইন করুন</h2>
+      <p class="form-intro">রক্তের অনুরোধ প্রকাশ বা ডোনারের সাথে যোগাযোগ করতে অ্যাকাউন্ট প্রয়োজন।</p>
+      <label>ইমেইল
+        <input name="email" type="email" autocomplete="email" maxlength="254" required>
+      </label>
+      <label>পাসওয়ার্ড
+        <input name="password" type="password" autocomplete="current-password" minlength="8" required>
+      </label>
+      <button class="button button-primary form-submit" id="auth-submit" type="submit">লগইন</button>
+      <button class="auth-mode-toggle" id="auth-mode-toggle" type="button">নতুন অ্যাকাউন্ট খুলুন</button>
+      <p class="form-message" id="auth-message" role="status"></p>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog small-dialog" id="contact-dialog" aria-labelledby="contact-title">
+    <form method="dialog">
+      <button class="dialog-close" type="button" aria-label="বন্ধ করুন" data-close-dialog>×</button>
+      <p class="eyebrow">ডোনারের সম্মতি</p>
+      <h2 id="contact-title">যোগাযোগের অনুরোধ</h2>
+      <p id="contact-copy">ডোনার অনুরোধ গ্রহণ করলে তাঁর ফোন নম্বর শুধু অনুরোধকারীর অ্যাকাউন্টে দেখানো হবে।</p>
+      <button class="button button-primary form-submit" type="submit">বুঝেছি</button>
+    </form>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "রক্তসাথী — রক্তদাতা খুঁজুন",
+  "short_name": "রক্তসাথী",
+  "description": "রক্তদাতা খোঁজা ও রক্তের অনুরোধের একটি নিরাপদ প্ল্যাটফর্ম।",
+  "lang": "bn",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffdfd",
+  "theme_color": "#a9162b",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
