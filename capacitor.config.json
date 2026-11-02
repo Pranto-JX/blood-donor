@@ -1,0 +1,11 @@
+{
+  "appId": "com.rokotosathi.app",
+  "appName": "রক্তসাথী",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#fffdfd"
+  }
+}

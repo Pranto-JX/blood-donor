@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { App } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const districts = ["ঢাকা", "চট্টগ্রাম", "রাজশাহী", "খুলনা", "সিলেট", "বরিশাল", "রংপুর", "ময়মনসিংহ"];
@@ -67,6 +69,43 @@ function showAuthDialog(mode = "signin") {
   document.querySelector('#auth-form [name="password"]').autocomplete = mode === "signup" ? "new-password" : "current-password";
   showFormMessage("auth-message", "");
   if (!authDialog.open) authDialog.showModal();
+}
+
+function getAuthRedirectUrl() {
+  return Capacitor.isNativePlatform()
+    ? "com.rokotosathi.app://auth/callback"
+    : window.location.origin;
+}
+
+async function handleAuthCallback(url) {
+  const callback = new URL(url);
+  const callbackParams = new URLSearchParams(callback.hash.slice(1));
+  const errorDescription = callback.searchParams.get("error_description")
+    || callbackParams.get("error_description");
+  if (errorDescription) {
+    setStatus(`ইমেইল নিশ্চিত করা যায়নি: ${errorDescription}`, true);
+    return;
+  }
+
+  const code = callback.searchParams.get("code") || callbackParams.get("code");
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) setStatus(`ইমেইল confirmation সম্পন্ন করা যায়নি: ${error.message}`, true);
+    return;
+  }
+
+  const accessToken = callbackParams.get("access_token");
+  const refreshToken = callbackParams.get("refresh_token");
+  if (accessToken && refreshToken) {
+    const { error } = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken
+    });
+    if (error) setStatus(`ইমেইল confirmation সম্পন্ন করা যায়নি: ${error.message}`, true);
+    return;
+  }
+
+  setStatus("ইমেইল link-এ কোনো confirmation token পাওয়া যায়নি। আবার signup link চাও।", true);
 }
 
 function formatRequestTime(value) {
@@ -506,7 +545,7 @@ document.querySelector("#auth-form").addEventListener("submit", async (event) =>
   const email = String(data.get("email")).trim();
   const password = String(data.get("password"));
   const result = authMode === "signup"
-    ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } })
+    ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: getAuthRedirectUrl() } })
     : await supabase.auth.signInWithPassword({ email, password });
   if (result.error) {
     showFormMessage("auth-message", `অ্যাকাউন্টে প্রবেশ করা যায়নি: ${result.error.message}`, true);
@@ -564,6 +603,17 @@ async function initialize() {
     await Promise.all([loadDonors(), loadRequests()]);
     activitySection.hidden = true;
     return;
+  }
+
+  if (Capacitor.isNativePlatform()) {
+    await App.addListener("appUrlOpen", ({ url }) => {
+      void handleAuthCallback(url).catch((error) => {
+        console.error("Email confirmation callback failed:", error);
+        setStatus("ইমেইল confirmation সম্পন্ন করা যায়নি। আবার লগইন করে চেষ্টা করো।", true);
+      });
+    });
+    const launchUrl = await App.getLaunchUrl();
+    if (launchUrl?.url) await handleAuthCallback(launchUrl.url);
   }
 
   const { data, error } = await supabase.auth.getSession();

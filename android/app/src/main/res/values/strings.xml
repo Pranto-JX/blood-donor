@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">রক্তসাথী</string>
+    <string name="title_activity_main">রক্তসাথী</string>
+    <string name="package_name">com.rokotosathi.app</string>
+    <string name="custom_url_scheme">com.rokotosathi.app</string>
+</resources>
